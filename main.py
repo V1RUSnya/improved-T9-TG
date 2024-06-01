@@ -2,8 +2,8 @@ import pyrogram
 
 app = pyrogram.Client("my_account")
 
-@app.on_message(pyrogram.filters.command(""))
+@app.on_message()
 def type(client_object, message: pyrogram.types.Message):
-   print(message.text)
+    print(message.text)
 
 app.run()
