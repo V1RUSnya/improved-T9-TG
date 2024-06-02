@@ -1,11 +1,16 @@
+import os
+
 class WordChecker:
-    def __init__(self):
+    def __init__(self, db_file='word_db.txt'):
+        self.db_file = db_file
         self.word_db = {}  # база слов с их частотами
         self.min_similarity = 0.6  # минимальное значение similarity для коррекции
+        self.load_db()
 
     def check_word(self, word):
         # 1. Получаем слово
         word = word.lower()  # приводим к нижнему регистру
+        word = self.remove_punctuation(word)  # удаляем знаки препинания
 
         # 2. Записываем слово в базу
         self.word_db[word] = self.word_db.get(word, 0) + 1
@@ -42,3 +47,19 @@ class WordChecker:
                 cost = 0 if word1[i - 1] == word2[j - 1] else 1
                 dp[i][j] = min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost)
         return 1 - dp[m][n] / max(m, n)
+
+    def remove_punctuation(self, word):
+        return ''.join(e for e in word if e.isalnum() or e.isspace())
+
+    def load_db(self):
+        if os.path.exists(self.db_file):
+            with open(self.db_file, 'r') as f:
+                for line in f:
+                    words = line.split()
+                    for word in words:
+                        self.word_db[word] = self.word_db.get(word, 0) + 1
+
+    def save_db(self):
+        with open(self.db_file, 'w') as f:
+            for word, freq in self.word_db.items():
+                f.write(word + ' ' * freq + '\n')

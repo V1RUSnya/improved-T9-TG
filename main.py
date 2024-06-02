@@ -15,3 +15,4 @@ def type(client_object, message: pyrogram.types.Message):
             message.edit(result)  # Изменение сообщения
 
 app.run()
+checker.save_db()
