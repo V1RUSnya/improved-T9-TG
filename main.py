@@ -1,5 +1,5 @@
 import pyrogram
-import ai
+import correct
 
 checker = ai.WordChecker()
 app = pyrogram.Client("my_account")
