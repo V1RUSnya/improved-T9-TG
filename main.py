@@ -13,6 +13,6 @@ def type(client_object, message: pyrogram.types.Message):
         if result != False:
             print(f"{message.text} -->> {result}")
             message.edit(result)  # Изменение сообщения
+    checker.save_db()
 
 app.run()
-checker.save_db()
