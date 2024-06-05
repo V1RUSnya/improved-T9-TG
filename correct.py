@@ -7,6 +7,17 @@ class WordChecker:
         self.min_similarity = 0.6  # минимальное значение similarity для коррекции
         self.load_db()
 
+    def check_text(self, text):
+        words = [word.strip() for word in text.split()]  # split text into individual words
+        corrected_words = []
+        for word in words:
+            corrected_word = self.check_word(word)
+            if corrected_word:
+                corrected_words.append(corrected_word)
+            else:
+                corrected_words.append(word)
+        return ' '.join(corrected_words)  # join corrected words with spaces
+
     def check_word(self, word):
         # 1. Получаем слово
         word = word.lower()  # приводим к нижнему регистру
@@ -57,10 +68,12 @@ class WordChecker:
                 for line in f:
                     parts = line.strip().split(':')
                     if len(parts) == 2:
-                        word, freq = parts
-                        self.word_db[word] = int(freq)
+                        phrase, freq = parts
+                        words = phrase.split()  # split phrase into individual words
+                        for word in words:
+                            self.word_db[word] = self.word_db.get(word, 0) + int(freq)
 
     def save_db(self):
         with open(self.db_file, 'w') as f:
-            for word, freq in sorted(self.word_db.items(), key=lambda x: x[1], reverse=True):
+            for word, freq in self.word_db.items():
                 f.write(f"{word}:{freq}\n")
