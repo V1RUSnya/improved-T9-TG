@@ -66,14 +66,14 @@ class WordChecker:
         if os.path.exists(self.db_file):
             with open(self.db_file, 'r') as f:
                 for line in f:
-                    parts = line.strip().split(':')
+                    parts = line.strip().split('\t')
                     if len(parts) == 2:
                         phrase, freq = parts
-                        words = phrase.split()  # split phrase into individual words
+                        words = phrase.split()
                         for word in words:
                             self.word_db[word] = self.word_db.get(word, 0) + int(freq)
 
     def save_db(self):
         with open(self.db_file, 'w') as f:
             for word, freq in self.word_db.items():
-                f.write(f"{word}:{freq}\n")
+                f.write(f"{word}\t{freq}\n")
