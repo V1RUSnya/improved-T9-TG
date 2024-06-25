@@ -1,14 +1,21 @@
 import pyrogram
+
+import config  # api_id and api_hash from https://my.telegram.org/
 import correct
 
 checker = correct.WordChecker()
-app = pyrogram.Client("my_account")
-your_user_id = 774159671  # ID user
+app = pyrogram.Client("my_account", api_id=config.api_id, api_hash=config.api_hash)
+user_id = None
 
 
 @app.on_message()
 def typing(client_object, message: pyrogram.types.Message):
-    if message.from_user is not None and message.from_user.id == your_user_id:
+    global user_id
+
+    if message.text == "/start":
+        user_id = message.from_user.id
+        message.edit("Ready ☑")
+    elif user_id is not None and message.from_user.id == user_id:
         words = message.text.split()
         corrected_words = []
         for word in words:
@@ -19,7 +26,8 @@ def typing(client_object, message: pyrogram.types.Message):
                 corrected_words.append(word)
         corrected_text = ' '.join(corrected_words)
         print(f"{message.text} -->> {corrected_text}")
-        if message.text != corrected_text: message.edit(corrected_text)
+        if message.text != corrected_text:
+            message.edit(corrected_text)
     checker.save_db()
 
 
