@@ -24,6 +24,7 @@ class WordChecker:
         self.db_file = db_file
         self.word_db = {}
         self.min_similarity = 0.6
+        self.word_count = 0
         self.load_db()
 
     def check_text(self, text):
@@ -44,6 +45,7 @@ class WordChecker:
 
         # 2. Write word to base
         self.word_db[word] = self.word_db.get(word, 0) + 1
+        self.word_count += 1
 
         # 3. Check word for similarity
         similar_words = self.find_similar_words(word)
@@ -74,8 +76,13 @@ class WordChecker:
                         words = phrase.split()
                         for word in words:
                             self.word_db[word] = self.word_db.get(word, 0) + int(freq)
+                            self.word_count += 1
 
     def save_db(self):
         with open(self.db_file, 'w') as f:
             for word, freq in self.word_db.items():
                 f.write(f"{word}\t{freq}\n")
+        self.word_count = len(self.word_db)
+
+    def can_correct(self):
+        return self.word_count >= 500

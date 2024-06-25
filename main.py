@@ -15,7 +15,7 @@ def typing(client_object, message: pyrogram.types.Message):
     if message.text == "/start":
         user_id = message.from_user.id
         message.edit("Ready ☑")
-    elif user_id is not None and message.from_user.id == user_id:
+    elif user_id is not None and message.from_user.id == user_id and checker.can_correct():
         words = message.text.split()
         corrected_words = []
         for word in words:
