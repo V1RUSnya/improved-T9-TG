@@ -12,6 +12,9 @@ user_id = None
 def typing(client_object, message: pyrogram.types.Message):
     global user_id
 
+    if message.from_user is None:
+        return
+
     if message.text == "/start":
         user_id = message.from_user.id
         message.edit("Ready ☑")
